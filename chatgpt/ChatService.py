@@ -140,7 +140,9 @@ class ChatService:
         else:
             self.gizmo_id = None
 
-        if "o3-mini-high" in self.origin_model:
+        if self.gizmo_id:
+            self.req_model = "gpt-4o"   # https://github.com/lanqian528/chat2api/pull/227
+        elif "o3-mini-high" in self.origin_model:
             self.req_model = "o3-mini-high"
         elif "o3-mini-medium" in self.origin_model:
             self.req_model = "o3-mini-medium"
