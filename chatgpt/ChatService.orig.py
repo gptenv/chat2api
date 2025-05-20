@@ -1,4 +1,3 @@
-import sqlite3
 import asyncio
 import hashlib
 import json
@@ -42,31 +41,6 @@ class ChatService:
         self.ss = None
         self.ws = None
 
-        # Set up SQLite for session storage
-        self.conn = sqlite3.connect('./data/session_storage.db')
-        self.cursor = self.conn.cursor()
-
-        # Create session table if not exists
-        self.cursor.execute('''
-            CREATE TABLE IF NOT EXISTS sessions (
-                req_token TEXT PRIMARY KEY,
-                conversation_id TEXT
-            )
-        ''')
-        self.conn.commit()
-
-    def get_stored_conversation_id(self):
-        # Retrieve the stored conversation ID for the current session (using req_token as key)
-        self.cursor.execute("SELECT conversation_id FROM sessions WHERE req_token=?", (self.req_token,))
-        result = self.cursor.fetchone()
-        return result[0] if result else None
-
-    def store_conversation_id(self, conversation_id):
-        # Store the conversation ID for the current session
-        self.cursor.execute("REPLACE INTO sessions (req_token, conversation_id) VALUES (?, ?)",
-                            (self.req_token, conversation_id))
-        self.conn.commit()
-
     async def set_dynamic_data(self, data):
         if self.req_token:
             req_len = len(self.req_token.split(","))
@@ -92,14 +66,6 @@ class ChatService:
 
         self.data = data
         await self.set_model()
-
-        # Retrieve conversation_id from request or use the stored one
-        self.conversation_id = self.data.get('conversation_id')  # Retrieve from the request or use stored one
-
-        if not self.conversation_id:
-            # If not provided, use the one stored in the session
-            self.conversation_id = self.get_stored_conversation_id()  # Retrieve the stored ID for the session
-        
         if enable_limit and self.req_token:
             limit_response = await handle_request_limit(self.req_token, self.req_model)
             if limit_response:
@@ -322,7 +288,6 @@ class ChatService:
         except Exception as e:
             logger.error(f"Failed to format messages: {str(e)}")
             raise HTTPException(status_code=400, detail="Failed to format messages.")
-
         self.chat_headers = self.base_headers.copy()
         self.chat_headers.update(
             {
@@ -344,24 +309,13 @@ class ChatService:
             self.chat_headers.pop('openai-sentinel-turnstile-token', None)
 
         if self.gizmo_id:
+            #conversation_mode = {"kind": "primary_assistant", "gizmo_id": self.gizmo_id}
             conversation_mode = {"kind": "gizmo_interaction", "gizmo_id": self.gizmo_id}
             logger.info(f"Gizmo id: {self.gizmo_id}")
         else:
             conversation_mode = {"kind": "primary_assistant"}
 
         logger.info(f"Model mapping: {self.origin_model} -> {self.req_model}")
-
-        # Include the conversation_id (whether from the client or stored session)
-        self.chat_request = {
-            "action": "next",
-            "conversation_mode": conversation_mode,
-            "conversation_origin": None,
-            "messages": chat_messages,
-            "model": self.req_model,
-            "parent_message_id": self.parent_message_id or f"{uuid.uuid4()}",
-            "conversation_id": self.conversation_id,  # Ensure conversation_id is included
-        }
-        
         self.chat_request = {
             "action": "next",
             "client_contextual_info": {
@@ -384,9 +338,7 @@ class ChatService:
             "model": self.req_model,
             "paragen_cot_summary_display_override": "allow",
             "paragen_stream_type_override": None,
-            #"parent_message_id": self.parent_message_id if self.parent_message_id else f"{uuid.uuid4()}",
-            "parent_message_id": self.parent_message_id or f"{uuid.uuid4()}",
-            "conversation_id": self.conversation_id,  # Ensure conversation_id is included
+            "parent_message_id": self.parent_message_id if self.parent_message_id else f"{uuid.uuid4()}",
             "reset_rate_limits": False,
             "suggestions": [],
             "supported_encodings": [],
@@ -612,4 +564,3 @@ class ChatService:
         if self.ws:
             await self.ws.close()
             del self.ws
-
