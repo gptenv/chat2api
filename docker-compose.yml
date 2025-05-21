@@ -26,15 +26,17 @@ services:
       start_period: 5s  # 容器启动后等待5秒再开始检查
       
   chat2api:
-    image: lanqian528/chat2api:latest
+    image: gptenv/chat2api:dev
     container_name: chat2api
     restart: unless-stopped
     ports:
       - '5005:5005'  # 暴露chat2api服务供外部访问
     environment:
-      - TZ=Asia/Shanghai
-      - AUTHORIZATION=sk-xxx
+      - TZ=America/Toronto
+      #- AUTHORIZATION=sk-xxx
       - PROXY_URL=socks5://warp:1080  # 设置 PROXY_URL 为 warp 容器的代理地址
+    env_file:
+      - .env
     depends_on:
       warp:
         condition: service_healthy  # 只有 warp 的健康检查通过时，chat2api 才会启动
