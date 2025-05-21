@@ -140,6 +140,7 @@ class ChatService:
         self.resp_model = model_proxy.get(self.origin_model, self.origin_model)
         if "gizmo" in self.origin_model or "g-" in self.origin_model:
             self.gizmo_id = "g-" + self.origin_model.split("g-")[-1]
+            self.req_model = "gpt-4o"
         else:
             self.gizmo_id = None
 
@@ -161,6 +162,10 @@ class ChatService:
             self.req_model = "o1-mini"
         elif "o1" in self.origin_model:
             self.req_model = "o1"
+        elif "gpt-4.1" in self.origin_model:
+            self.req_model = "gpt-4.1"
+        elif "gpt-4.1-mini" in self.origin_model:
+            self.req_model = "gpt-4.1-mini"
         elif "gpt-4.5o" in self.origin_model:
             self.req_model = "gpt-4.5o"
         elif "gpt-4o-canmore" in self.origin_model:
