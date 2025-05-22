@@ -136,7 +136,7 @@ class ChatService:
         await get_dpl(self)
 
     async def set_model(self):
-        self.origin_model = self.data.get("model", "gpt-3.5-turbo-0125")
+        self.origin_model = self.data.get("model", "gpt-4o")
         self.resp_model = model_proxy.get(self.origin_model, self.origin_model)
         if "gizmo" in self.origin_model or "g-" in self.origin_model:
             self.gizmo_id = "g-" + self.origin_model.split("g-")[-1]
@@ -171,17 +171,17 @@ class ChatService:
         elif "gpt-4o-canmore" in self.origin_model:
             self.req_model = "gpt-4o-canmore"
         elif "gpt-4o-mini" in self.origin_model:
-            self.req_model = "gpt-4o-mini"
+            self.req_model = "gpt-4o"
         elif "gpt-4o" in self.origin_model:
             self.req_model = "gpt-4o"
         elif "gpt-4-mobile" in self.origin_model:
             self.req_model = "gpt-4-mobile"
-        elif "gpt-4" in self.origin_model:
-            self.req_model = "gpt-4"
-        elif "gpt-3.5" in self.origin_model:
-            self.req_model = "text-davinci-002-render-sha"
-        elif "auto" in self.origin_model:
-            self.req_model = "auto"
+        #elif "gpt-4" in self.origin_model:
+        #    self.req_model = "gpt-4"
+        #elif "gpt-3.5" in self.origin_model:
+        #    self.req_model = "text-davinci-002-render-sha"
+        #elif "auto" in self.origin_model:
+        #    self.req_model = "auto"
         else:
             self.req_model = "gpt-4o"
 

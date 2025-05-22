@@ -33,7 +33,6 @@ services:
       - '5005:5005'  # 暴露chat2api服务供外部访问
     environment:
       - TZ=America/Toronto
-      #- AUTHORIZATION=sk-xxx
       - PROXY_URL=socks5://warp:1080  # 设置 PROXY_URL 为 warp 容器的代理地址
     env_file:
       - .env
@@ -50,7 +49,7 @@ services:
     container_name: watchtower
     restart: unless-stopped
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /run/user/1001/docker.sock:/var/run/docker.sock
     command: --cleanup --interval 300 chat2api
     
 networks:
