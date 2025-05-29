@@ -42,16 +42,16 @@ platform_tuple_str = os.getenv('PLATFORM_TUPLE', '()')
 cf_file_url = os.getenv('CF_FILE_URL', None)
 turnstile_solver_url = os.getenv('TURNSTILE_SOLVER_URL', None)
 
-history_disabled = is_true(os.getenv('HISTORY_DISABLED', True))
+history_disabled = is_true(os.getenv('HISTORY_DISABLED', False))
 pow_difficulty = os.getenv('POW_DIFFICULTY', '000032')
 retry_times = int(os.getenv('RETRY_TIMES', 3))
 conversation_only = is_true(os.getenv('CONVERSATION_ONLY', False))
 enable_limit = is_true(os.getenv('ENABLE_LIMIT', True))
-upload_by_url = is_true(os.getenv('UPLOAD_BY_URL', False))
+upload_by_url = is_true(os.getenv('UPLOAD_BY_URL', True))
 check_model = is_true(os.getenv('CHECK_MODEL', False))
 scheduled_refresh = is_true(os.getenv('SCHEDULED_REFRESH', False))
 random_token = is_true(os.getenv('RANDOM_TOKEN', True))
-oai_language = os.getenv('OAI_LANGUAGE', 'zh-CN')
+oai_language = os.getenv('OAI_LANGUAGE', 'en-US')
 
 authorization_list = authorization.split(',') if authorization else []
 chatgpt_base_url_list = chatgpt_base_url.split(',') if chatgpt_base_url else []
@@ -64,7 +64,7 @@ device_tuple = ast.literal_eval(device_tuple_str)
 browser_tuple = ast.literal_eval(browser_tuple_str)
 platform_tuple = ast.literal_eval(platform_tuple_str)
 
-enable_gateway = is_true(os.getenv('ENABLE_GATEWAY', False))
+enable_gateway = is_true(os.getenv('ENABLE_GATEWAY', True))
 auto_seed = is_true(os.getenv('AUTO_SEED', True))
 force_no_history = is_true(os.getenv('FORCE_NO_HISTORY', False))
 no_sentinel = is_true(os.getenv('NO_SENTINEL', False))
