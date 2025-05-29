@@ -1,8 +1,9 @@
 .env
+docker-compose.yml
 *.pyc
-/.git/
 /.idea/
 /tmp/
 /data/
+/warpdata/
 /.venv/
 /.vscode/
