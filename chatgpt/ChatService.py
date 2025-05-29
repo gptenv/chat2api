@@ -136,54 +136,56 @@ class ChatService:
         await get_dpl(self)
 
     async def set_model(self):
-        self.origin_model = self.data.get("model", "gpt-4o")
+        self.origin_model = self.data.get("model", "gpt-4o-mini")
         self.resp_model = model_proxy.get(self.origin_model, self.origin_model)
         if "gizmo" in self.origin_model or "g-" in self.origin_model:
             self.gizmo_id = "g-" + self.origin_model.split("g-")[-1]
             self.req_model = "gpt-4o"
         else:
             self.gizmo_id = None
-
-        if "o3-mini-high" in self.origin_model:
-            self.req_model = "o3-mini-high"
-        elif "o3-mini-medium" in self.origin_model:
-            self.req_model = "o3-mini-medium"
-        elif "o3-mini-low" in self.origin_model:
-            self.req_model = "o3-mini-low"
-        elif "o3-mini" in self.origin_model:
-            self.req_model = "o3-mini"
-        elif "o3" in self.origin_model:
-            self.req_model = "o3"
-        elif "o1-preview" in self.origin_model:
-            self.req_model = "o1-preview"
-        elif "o1-pro" in self.origin_model:
-            self.req_model = "o1-pro"
-        elif "o1-mini" in self.origin_model:
-            self.req_model = "o1-mini"
-        elif "o1" in self.origin_model:
-            self.req_model = "o1"
-        elif "gpt-4.1" in self.origin_model:
-            self.req_model = "gpt-4.1"
-        elif "gpt-4.1-mini" in self.origin_model:
-            self.req_model = "gpt-4.1-mini"
-        elif "gpt-4.5o" in self.origin_model:
-            self.req_model = "gpt-4.5o"
-        elif "gpt-4o-canmore" in self.origin_model:
-            self.req_model = "gpt-4o-canmore"
-        elif "gpt-4o-mini" in self.origin_model:
-            self.req_model = "gpt-4o"
-        elif "gpt-4o" in self.origin_model:
-            self.req_model = "gpt-4o"
-        elif "gpt-4-mobile" in self.origin_model:
-            self.req_model = "gpt-4-mobile"
-        #elif "gpt-4" in self.origin_model:
-        #    self.req_model = "gpt-4"
-        #elif "gpt-3.5" in self.origin_model:
-        #    self.req_model = "text-davinci-002-render-sha"
-        #elif "auto" in self.origin_model:
-        #    self.req_model = "auto"
-        else:
-            self.req_model = "gpt-4o"
+    
+            if "o3-mini-high" in self.origin_model:
+                self.req_model = "o3-mini-high"
+            elif "o3-mini-medium" in self.origin_model:
+                self.req_model = "o3-mini-medium"
+            elif "o3-mini-low" in self.origin_model:
+                self.req_model = "o3-mini-low"
+            elif "o3-mini" in self.origin_model:
+                self.req_model = "o3-mini"
+            elif "o3" in self.origin_model:
+                self.req_model = "o3"
+            elif "o1-preview" in self.origin_model:
+                self.req_model = "o1-preview"
+            elif "o1-pro" in self.origin_model:
+                self.req_model = "o1-pro"
+            elif "o1-mini" in self.origin_model:
+                self.req_model = "o1-mini"
+            elif "o1" in self.origin_model:
+                self.req_model = "o1"
+            elif "gpt-4.1" in self.origin_model:
+                self.req_model = "gpt-4.1"
+            elif "gpt-4.1-mini" in self.origin_model:
+                self.req_model = "gpt-4.1-mini"
+            elif "gpt-4.5o" in self.origin_model:
+                self.req_model = "gpt-4.5o"
+            elif "gpt-4o-canmore" in self.origin_model:
+                self.req_model = "gpt-4o-canmore"
+            elif "gpt-4o-mini" in self.origin_model:
+                self.req_model = "gpt-4o"
+            elif "gpt-4o" in self.origin_model:
+                self.req_model = "gpt-4o"
+            elif "gpt-4-mobile" in self.origin_model:
+                self.req_model = "gpt-4-mobile"
+            elif "gpt-4" in self.origin_model:
+                self.req_model = "gpt-4"
+            elif "gpt-3.5" in self.origin_model:
+                self.req_model = "text-davinci-002-render-sha"
+            elif "research" in self.origin_model:
+                self.req_model = "research"
+            elif "auto" in self.origin_model:
+                self.req_model = "auto"
+            else:
+                self.req_model = "gpt-4o"
 
     async def get_chat_requirements(self):
         if conversation_only:

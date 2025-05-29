@@ -49,7 +49,7 @@ services:
     container_name: watchtower
     restart: unless-stopped
     volumes:
-      - /run/user/1001/docker.sock:/var/run/docker.sock
+      - /run/user/1000/docker.sock:/var/run/docker.sock
     command: --cleanup --interval 300 chat2api
     
 networks:
