@@ -129,7 +129,11 @@ async def head_process_response(response):
 
 async def stream_response(service, response, model, max_tokens):
     chat_id = f"chatcmpl-{''.join(random.choice(string.ascii_letters + string.digits) for _ in range(29))}"
-    conversation_id = response.conversation_id or service.conversation_id or ""
+    conversation_id = ""
+    if conversation_id in response:
+        conversation_id = response.conversation_id
+    elif conversation_id in service:
+        conversation_id = service.conversation_id
     system_fingerprint_list = model_system_fingerprint.get(model, None)
     system_fingerprint = random.choice(system_fingerprint_list) if system_fingerprint_list else None
     created_time = int(time.time())
@@ -466,9 +470,10 @@ async def api_messages_to_chat(service, api_messages, upload_by_url=False):
             "id": f"{uuid.uuid4()}",
             "author": {"role": role},
             "content": {"content_type": content_type, "parts": parts},
-            "metadata": metadata,
-            "conversation_id": service.conversation_id or ""
+            "metadata": metadata
         }
+        if conversation_id in service:
+            chat_message["conversation_id"] = service.conversation_id
         chat_messages.append(chat_message)
     if "image" in service.origin_model or "image" in service.req_model:
         chat_messages[-1]["metadata"]["system_hints"] = ["picture_v2"]

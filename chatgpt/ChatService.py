@@ -331,7 +331,7 @@ class ChatService:
                 "screen_width": 2560,
             },
             "conversation_mode": conversation_mode,
-            "enable_message_followups": False,
+            "enable_message_followups": True,
             "force_paragen": False,
             "force_paragen_model_slug": "",
             "force_rate_limit": False,
