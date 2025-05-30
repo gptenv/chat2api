@@ -136,15 +136,26 @@ class ChatService:
         await get_dpl(self)
 
     async def set_model(self):
-        self.origin_model = self.data.get("model", "gpt-4o-mini")
+        self.origin_model = self.data.get("model", "gpt-4-1")
         self.resp_model = model_proxy.get(self.origin_model, self.origin_model)
         if "gizmo" in self.origin_model or "g-" in self.origin_model:
             self.gizmo_id = "g-" + self.origin_model.split("g-")[-1]
-            self.req_model = "gpt-4o"
+            self.req_model = "gpt-4-1"
+            self.resp_model = "gpt-4-1"
         else:
             self.gizmo_id = None
     
-            if "o3-mini-high" in self.origin_model:
+            if "o4-mini-high" in self.origin_model:
+                self.req_model = "o4-mini-high"
+            elif "o4-mini-medium" in self.origin_model:
+                self.req_model = "o4-mini-medium"
+            elif "o4-mini-low" in self.origin_model:
+                self.req_model = "o4-mini-low"
+            elif "o4-mini" in self.origin_model:
+                self.req_model = "o4-mini"
+            elif "o4" in self.origin_model:
+                self.req_model = "o4"
+            elif "o3-mini-high" in self.origin_model:
                 self.req_model = "o3-mini-high"
             elif "o3-mini-medium" in self.origin_model:
                 self.req_model = "o3-mini-medium"
@@ -162,18 +173,30 @@ class ChatService:
                 self.req_model = "o1-mini"
             elif "o1" in self.origin_model:
                 self.req_model = "o1"
-            elif "gpt-4.1" in self.origin_model:
-                self.req_model = "gpt-4.1"
+            elif "gpt-4.1o" in self.origin_model:
+                self.req_model = "gpt-4-1o"
+            elif "gpt-4-1o" in self.origin_model:
+                self.req_model = "gpt-4-1o"
             elif "gpt-4.1-mini" in self.origin_model:
-                self.req_model = "gpt-4.1-mini"
+                self.req_model = "gpt-4-1-mini"
+            elif "gpt-4.1" in self.origin_model:
+                self.req_model = "gpt-4-1"
+            elif "gpt-4-1-mini" in self.origin_model:
+                self.req_model = "gpt-4-1-mini"
+            elif "gpt-4-1" in self.origin_model:
+                self.req_model = "gpt-4-1"
             elif "gpt-4.5o" in self.origin_model:
-                self.req_model = "gpt-4.5o"
+                self.req_model = "gpt-4-5o"
+            elif "gpt-4-5o" in self.origin_model:
+                self.req_model = "gpt-4-5o"
             elif "gpt-4o-canmore" in self.origin_model:
                 self.req_model = "gpt-4o-canmore"
             elif "gpt-4o-mini" in self.origin_model:
-                self.req_model = "gpt-4o"
+                self.req_model = "gpt-4o-mini"
             elif "gpt-4o" in self.origin_model:
                 self.req_model = "gpt-4o"
+            elif "chatgpt-4o-latest" in self.origin_model:
+                self.req_model = "chatgpt-4o-latest"
             elif "gpt-4-mobile" in self.origin_model:
                 self.req_model = "gpt-4-mobile"
             elif "gpt-4" in self.origin_model:
@@ -182,10 +205,12 @@ class ChatService:
                 self.req_model = "text-davinci-002-render-sha"
             elif "research" in self.origin_model:
                 self.req_model = "research"
+            elif "chatgpt" in self.origin_model:
+                self.req_model = "chatgpt"
             elif "auto" in self.origin_model:
                 self.req_model = "auto"
             else:
-                self.req_model = "gpt-4o"
+                self.req_model = "gpt-4-1"
 
     async def get_chat_requirements(self):
         if conversation_only:

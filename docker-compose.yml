@@ -26,7 +26,7 @@ services:
       start_period: 5s  # 容器启动后等待5秒再开始检查
       
   chat2api:
-    image: gptenv/chat2api:dev
+    image: gptenv/chat2api:latest
     container_name: chat2api
     restart: unless-stopped
     ports:
