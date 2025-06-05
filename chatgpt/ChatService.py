@@ -416,7 +416,7 @@ class ChatService:
             #"force_paragen_model_slug": "gpt-4o",
             "force_rate_limit": False,
             #"force_use_sse": True,
-            "force_use_sse": False,
+            "force_use_sse": True,
             "messages": chat_messages,
             "model": self.req_model,
             "paragen_cot_summary_display_override": "allow",
