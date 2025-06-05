@@ -2,7 +2,7 @@ name: chat2api
 services:
   warp:
     image: caomingjun/warp
-    container_name: warp
+    container_name: chat2api-warp
     restart: always
     devices:
       - /dev/net/tun:/dev/net/tun
@@ -28,6 +28,7 @@ services:
       
   chat2api:
     image: gptenv/chat2api:latest
+    build: .
     container_name: chat2api
     restart: unless-stopped
     ports:
@@ -47,7 +48,7 @@ services:
 
   watchtower:
     image: containrrr/watchtower
-    container_name: watchtower
+    container_name: chat2api-watchtower
     restart: unless-stopped
     volumes:
       - /run/user/1000/docker.sock:/var/run/docker.sock
