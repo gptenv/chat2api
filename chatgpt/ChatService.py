@@ -136,13 +136,22 @@ class ChatService:
         await get_dpl(self)
 
     async def set_model(self):
+        #self.origin_model = self.data.get("model", "research")
         self.origin_model = self.data.get("model", "gpt-4o")
+        #self.origin_model = self.data.get("model", "gpt-4-1")
         #self.resp_model = model_proxy.get(self.origin_model, self.origin_model)
+        #self.resp_model = model_proxy.get(self.origin_model, "research")
         self.resp_model = model_proxy.get(self.origin_model, "gpt-4o")
+        #self.resp_model = model_proxy.get(self.origin_model, "gpt-4-1")
         if "gizmo" in self.origin_model or "g-" in self.origin_model:
             self.gizmo_id = "g-" + self.origin_model.split("g-")[-1]
+            #self.req_model = "research"
+            #self.resp_model = "research"
             self.req_model = "gpt-4o"
             self.resp_model = "gpt-4o"
+            #self.req_model = "gpt-4-1"
+            #self.resp_model = "gpt-4-1"
+            #self.resp_model = "chatgpt-4o-latest"
         else:
             self.gizmo_id = None
     
@@ -195,14 +204,14 @@ class ChatService:
                 self.req_model = "gpt-4-1o"
                 self.resp_model = "gpt-4-1o"
             elif "gpt-4.1-mini" in self.origin_model:
-                self.req_model = "gpt-4-1-mini"
-                self.resp_model = "gpt-4-1-mini"
+                self.req_model = "gpt-4-1"
+                self.resp_model = "gpt-4-1"
             elif "gpt-4.1" in self.origin_model:
                 self.req_model = "gpt-4-1"
                 self.resp_model = "gpt-4-1"
             elif "gpt-4-1-mini" in self.origin_model:
-                self.req_model = "gpt-4-1-mini"
-                self.resp_model = "gpt-4-1-mini"
+                self.req_model = "gpt-4-1"
+                self.resp_model = "gpt-4-1"
             elif "gpt-4-1" in self.origin_model:
                 self.req_model = "gpt-4-1"
                 self.resp_model = "gpt-4-1"
@@ -216,11 +225,13 @@ class ChatService:
                 self.req_model = "gpt-4o-canmore"
                 self.resp_model = "gpt-4o-canmore"
             elif "gpt-4o-mini" in self.origin_model:
-                self.req_model = "gpt-4o-mini"
-                self.resp_model = "gpt-4o-mini"
+                #self.req_model = "gpt-4o-mini"
+                self.req_model = "gpt-4o"
+                self.resp_model = "gpt-4o"
             elif "gpt-4o" in self.origin_model:
                 self.req_model = "gpt-4o"
                 self.resp_model = "gpt-4o"
+                #self.resp_model = "chatgpt-4o-latest"
             elif "chatgpt-4o-latest" in self.origin_model:
                 self.req_model = "chatgpt-4o-latest"
                 self.resp_model = "chatgpt-4o-latest"
@@ -242,9 +253,15 @@ class ChatService:
             elif "auto" in self.origin_model:
                 self.req_model = "auto"
                 self.resp_model = "auto"
+                #self.req_model = "gpt-4-1"
+                #self.resp_model = "gpt-4-1"
             else:
                 self.req_model = "gpt-4o"
-                self.req_model = "gpt-4o"
+                self.resp_model = "gpt-4o"
+                #self.req_model = "gpt-4-1"
+                #self.resp_model = "gpt-4-1"
+                #self.req_model = "research"
+                #self.resp_model = "research"
 
     async def get_chat_requirements(self):
         if conversation_only:
@@ -381,7 +398,8 @@ class ChatService:
         self.chat_request = {
             "action": "next",
             "client_contextual_info": {
-                "is_dark_mode": False,
+                #"is_dark_mode": False,
+                "is_dark_mode": True,
                 "time_since_loaded": random.randint(50, 500),
                 "page_height": random.randint(500, 1000),
                 "page_width": random.randint(1000, 2000),
@@ -390,18 +408,23 @@ class ChatService:
                 "screen_width": 2560,
             },
             "conversation_mode": conversation_mode,
-            "enable_message_followups": True,
+            #"enable_message_followups": True,
+            "enable_message_followups": False,
             "force_paragen": False,
+            #"force_paragen": True,
             "force_paragen_model_slug": "",
+            #"force_paragen_model_slug": "gpt-4o",
             "force_rate_limit": False,
-            "force_use_sse": True,
+            #"force_use_sse": True,
+            "force_use_sse": False,
             "messages": chat_messages,
             "model": self.req_model,
             "paragen_cot_summary_display_override": "allow",
             "parent_message_id": self.parent_message_id if self.parent_message_id else f"client-created-root",
             "supported_encodings": ["v1"],
             "system_hints": [],
-            "timezone": "America/Los_Angeles",
+            #"timezone": "America/Los_Angeles",
+            "timezone": "America/Toronto",
             "timezone_offset_min": -480,
             "variant_purpose": "comparison_implicit",
         }

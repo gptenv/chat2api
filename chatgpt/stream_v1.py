@@ -10,12 +10,15 @@ async def transform_delta_stream(input_stream) -> AsyncGenerator[str, None]:
     current_c = None
     current_o = None
     current_p = None
+    lines = ""
 
     try:
         async for line in input_stream:
             line = line.decode("utf-8").strip()
             if not line:
                 continue
+
+            lines += line + "\n"
 
             if line.startswith("event: "):
                 next_is_delta = True
@@ -28,17 +31,19 @@ async def transform_delta_stream(input_stream) -> AsyncGenerator[str, None]:
                     yield line
                     continue
 
+                json_data = {}
+
                 try:
                     json_data = json.loads(data)
 
-                    if 'c' in json_data:
+                    if 'c' in json_data and isinstance(json_data, dict):
                         current_c = json_data['c']
                         if 'v' in json_data and isinstance(json_data['v'], dict):
                             current_documents[current_c] = json_data['v']
                             yield f'data: {json.dumps(current_documents[current_c])}'
                         continue
 
-                    if 'v' in json_data:
+                    if 'v' in json_data and isinstance(json_data, dict):
                         if 'p' in json_data:
                             current_p = json_data['p']
                         if 'o' in json_data:
@@ -46,9 +51,14 @@ async def transform_delta_stream(input_stream) -> AsyncGenerator[str, None]:
                         if current_c is not None and current_c in current_documents:
                             apply_patch(current_documents, current_p, current_o, json_data['v'], current_c)
 
-                    yield f'data: {json.dumps(current_documents[current_c])}'
+                    if current_c is not None and current_c in current_documents:
+                        yield f'data: {json.dumps(current_documents[current_c])}'
+                    else:
+                        yield line
+
                 except Exception as e:
-                    logging.error(f"Error processing JSON data: {e}")
+                    logging.error(f"Error processing JSON data: |[ e: {e} ]| : |[ json_data: {json_data} ]| : |[ data: {data} ]| : |[ line: {line} ]| : |[ current_documents: {current_documents} ]| : |[ next_is_delta: {next_is_delta} ]| : |[ current_c: {current_c} ]| : |[ current_o: {current_o} ]| : |[ current_p: {current_p} ]|")
+                    logging.error(f"|[ lines: {lines} ]|")
                     yield line
             else:
                 yield line

@@ -1,3 +1,4 @@
+name: chat2api
 services:
   warp:
     image: caomingjun/warp

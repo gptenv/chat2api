@@ -1,5 +1,6 @@
 version: '3'
 
+name: chat2api
 services:
   chat2api:
     image: gptenv/chat2api:latest
